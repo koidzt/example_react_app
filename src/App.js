@@ -18,38 +18,24 @@ class Team {
     this.played += 1;
   }
 
-  // updatedMatchResults(result) {
-  //   switch (result) {
-  //     case won:
-  //       this.won += 1;
-  //       this.point += 3;
-  //       break;
-  //     case lost:
-  //       this.lost += 1;
-  //       break;
-  //     case drawn:
-  //       this.drawn += 1;
-  //       this.point += 1;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
+  updatedMatchResults(result) {
+    switch (result) {
+      case 'won':
+        this.won += 1;
+        this.point += 3;
+        break;
+      case 'lost':
+        this.lost += 1;
+        break;
+      case 'drawn':
+        this.drawn += 1;
+        this.point += 1;
+        break;
+      default:
+        break;
+    }
+  }
 }
-
-//Fetch Clubs
-const fetchClubsData = async () => {
-  let resClubs = await fetch('/en.1.clubs.json', {
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  });
-  resClubs = await resClubs.json();
-  resClubs = resClubs.clubs;
-
-  return resClubs;
-};
 
 //Fetch Rounds
 const fetchRoundsData = async () => {
@@ -60,35 +46,50 @@ const fetchRoundsData = async () => {
     },
   });
   resRounds = await resRounds.json();
-  resRounds = resRounds.rounds;
 
-  const reduceResRounds;
+  //spread matches
+  const reduceResRounds = resRounds.rounds.reduce((acc, round) => {
+    acc = [...acc, ...round.matches];
+    return acc;
+  }, []);
 
-  return resRounds;
+  const sortRounds = reduceResRounds.sort((a, b) => a.date > b.date); // 2017-11-04 --> 2018-05-13
+  // const sortRounds = reduceResRounds.sort((a, b) => (a.date > b.date ? -1 : 1)); //  2018-05-13 --> 2017-11-04
+
+  return sortRounds;
 };
 
-//Updated Match Results
-// const updatedMatchResults = (newMatchResults, resRounds) => {
-//   let matchResults = { ...newMatchResults };
-//   _.forEach(resRounds, (round) => {
-//     _.forEach(round.matches, (match) => {
-//       if (match.score.ft[0] > match.score.ft[1]) {
-//         matchResults[match.team1].updatedMatchResults('won');
-//         matchResults[match.team2].updatedMatchResults('lost');
-//       }
-//       if (match.score.ft[0] < match.score.ft[1]) {
-//         matchResults[match.team1].updatedMatchResults('lost');
-//         matchResults[match.team2].updatedMatchResults('won');
-//       }
-//       if (match.score.ft[0] === match.score.ft[1]) {
-//         matchResults[match.team1].updatedMatchResults('drawn');
-//         matchResults[match.team2].updatedMatchResults('drawn');
-//       }
-//     });
-//   });
+// Updated Match Results
+const updatedMatchResults = (resRounds) => {
+  const computedData = resRounds.reduce((acc, match) => {
+    if (!acc[match.team1]) {
+      acc[match.team1] = new Team(match.team1);
+    }
+    if (!acc[match.team2]) {
+      acc[match.team2] = new Team(match.team2);
+    }
 
-//   return matchResults;
-// };
+    acc[match.team1].addPlayed();
+    acc[match.team2].addPlayed();
+
+    if (match.score.ft[0] > match.score.ft[1]) {
+      acc[match.team1].updatedMatchResults('won');
+      acc[match.team2].updatedMatchResults('lost');
+    }
+    if (match.score.ft[0] < match.score.ft[1]) {
+      acc[match.team1].updatedMatchResults('lost');
+      acc[match.team2].updatedMatchResults('won');
+    }
+    if (match.score.ft[0] === match.score.ft[1]) {
+      acc[match.team1].updatedMatchResults('drawn');
+      acc[match.team2].updatedMatchResults('drawn');
+    }
+
+    return acc;
+  }, {});
+
+  return computedData;
+};
 
 //Sort Match Results By Points and Change Object to Array
 const sortRankForEachClub = (matchResults) => {
@@ -97,21 +98,16 @@ const sortRankForEachClub = (matchResults) => {
 };
 
 function App() {
+  const [matches, setMatches] = useState([]);
   const [clubs, setClubs] = useState([]);
-  const [rounds, setRounds] = useState([]);
-  const [sumClubs, setSumClubs] = useState([]);
 
   useEffect(async () => {
-    const fetchClubs = await fetchClubsData();
-    const fetchRounds = await fetchRoundsData();
-    console.log(fetchRounds);
-    // let matchResults = fetchClubs.map((item) => new Team(item.name));
-    // const matchResults = updatedMatchResults(newMatchResults, fetchRounds);
-    // const rankClubs = sortRankForEachClub(matchResults);
+    const fetchAllMatches = await fetchRoundsData();
+    const matchResults = updatedMatchResults(fetchAllMatches);
+    const rankClubs = sortRankForEachClub(matchResults);
 
-    setClubs(fetchClubs);
-    setRounds(fetchRounds);
-    // setSumClubs(rankClubs);
+    setMatches(fetchAllMatches);
+    setClubs(rankClubs);
   }, []);
 
   return (
@@ -119,7 +115,7 @@ function App() {
       <div className="container">
         <h2>Premier League 2017/18</h2>
 
-        <table className="table container">
+        <table className="table">
           <thead>
             <tr>
               <th colSpan="2">Club</th>
@@ -131,7 +127,7 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {/* {sumClubs.map((club, i) => (
+            {clubs.map((club, i) => (
               <tr key={club.name}>
                 <td>{i + 1}</td>
                 <td>{club.name}</td>
@@ -141,7 +137,7 @@ function App() {
                 <td>{club.lost}</td>
                 <td>{club.point}</td>
               </tr>
-            ))} */}
+            ))}
           </tbody>
         </table>
       </div>
