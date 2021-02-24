@@ -17,21 +17,23 @@ async function exTest() {
 
   worksheet.addRow([3, 'Sam', new Date()]);
 
+  // await workbook.xlsx.writeFile(filename);
+
+  //writeFile ไม่รองรับทำให้ต้องเขียนเป็น writeBuffer แทนแล้ว saveAs ด้วย file-saver
   const buffer = await workbook.xlsx.writeBuffer();
 
+  //SaveAs ด้วย file-saver ต้อง npm i file-saver และ import {saveAs}
   const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
   const fileExtension = '.xlsx';
-
   const blob = new Blob([buffer], { type: fileType });
-
   saveAs(blob, 'testExcelJS' + fileExtension);
 
   console.log('File is written');
 }
 
-function App() {
+function ExcelJS() {
   return (
-    <div className="App">
+    <div className="ExcelJS">
       <div className="container mt-4">
         <button className="btn btn-primary" onClick={exTest}>
           Create Excel
@@ -41,4 +43,4 @@ function App() {
   );
 }
 
-export default App;
+export default ExcelJS;
