@@ -1,43 +1,49 @@
-import React from 'react';
+import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import NameCard from './components/NameCard';
 
-class App extends React.Component {
+class App extends Component {
+  // state = {
+  //   isShow: true,
+  // };
+
+  // render() {
+  //   const { isShow } = this.state;
+  //   // const isShow = this.state.isShow;
+
+  //   return (
+  //     <div className="App" >
+  //       <button onClick={() => this.setState({ isShow: !isShow })}>Hide All Students</button>
+  //       {isShow ? ([
+  //         <NameCard key={1} name="Koi" age={18} color="Cyan" />,
+  //         <NameCard key={2} name="Cake" age={19} color="Green" />,
+  //         <NameCard key={3} name="Pup" age={17} color="Red" />
+  //       ]) : null}
+  //     </div>
+  //   );
+  // }
+
   state = {
-    // inputValue: "",
-    count: 0,
+    isShow: true,
+    students: [
+      { id: 1, name: 'Koi', age: 18, color: 'Cyan' },
+      { id: 2, name: 'Cake', age: 19, color: 'Green' },
+      { id: 3, name: 'Pup', age: 17, color: 'Red' },
+    ],
   };
+
   render() {
+    const { isShow } = this.state;
+    const studentList = this.state.students;
+
     return (
-      <div className="App" style={{ margin: '1em' }}>
-        {/* <input
-          onChange={(e) => this.setState({ inputValue: e.target.value })}
-          style={{ width: "400px", height: "50px", fontSize: "40px" }} />
-        <h1>{this.state.inputValue}</h1>   */}
-        <button
-          onClick={() => {
-            this.setState({ count: this.state.count + 1 });
-          }}
-          style={{ fontSize: '4em', width: '3em', padding: '0.2em' }}
-        >
-          UP
-        </button>
-        <h1 style={{ fontSize: '10em' }}>{this.state.count}</h1>
-        <button
-          onClick={() => {
-            this.setState({ count: this.state.count - 1 });
-          }}
-          disabled={this.state.count === 0}
-          style={{ fontSize: '4em', padding: '0.2em' }}
-        >
-          DOWN
-        </button>
-        <button
-          onClick={() => this.setState({ count: 0 })}
-          style={{ fontSize: '4em', padding: '0.2em', margin: '0.2em' }}
-        >
-          RESET
-        </button>
+      <div className="App">
+        <button onClick={() => this.setState({ isShow: !isShow })}>Hide All Students</button>
+        {isShow &&
+          studentList.map((student) => (
+            <NameCard key={student.id} name={student.name} age={student.age} color={student.color} />
+          ))}
       </div>
     );
   }
