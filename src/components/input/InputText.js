@@ -1,30 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
 import '../../App.css';
 
-export default class InputText extends Component {
-  getClassCSS = () => {
+function InputText(props) {
+  const { value, onChangeInput, name, placeholder } = props;
+
+  const getClassCSS = () => {
     let cssClass = 'Input InputElement';
-    if (this.props.error && this.props.error.isTouched) {
+    if (props.error && props.error.isTouched) {
       cssClass += ' Invalid';
     }
 
     return cssClass;
   };
-
-  render() {
-    const { value, onChangeInput, name, placeholder } = this.props;
-
-    return (
-      <div>
-        <input
-          value={value}
-          onChange={onChangeInput}
-          className={this.getClassCSS()}
-          name={name}
-          placeholder={placeholder}
-        />
-        <p className="ErrorMessage">{this.props.error.message}</p>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <input value={value} onChange={onChangeInput} className={getClassCSS()} name={name} placeholder={placeholder} />
+      <p className="ErrorMessage">{props.error.message}</p>
+    </div>
+  );
 }
+
+export default InputText;

@@ -1,47 +1,48 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import InputText from '../../components/input/InputText';
 
-export default class RegisterForm extends Component {
-  state = {
-    formData: {
-      name: {
-        value: '',
-        validator: {
-          minLength: 3,
-          maxLength: 6,
-          required: true,
-        },
-        error: { status: true, message: '', isTouched: false },
-      },
-      phonenumber: {
-        value: '',
-        validator: {
-          minLength: 10,
-          maxLength: 10,
-        },
-        error: { status: true, message: '', isTouched: false },
-      },
-      email: {
-        value: '',
-        validator: {
-          required: true,
-        },
-        error: { status: true, message: '', isTouched: false },
-      },
-      password: {
-        value: '',
-        validator: {
-          minLength: 6,
-          maxLength: 24,
-          required: true,
-        },
-        error: { status: true, message: '', isTouched: false },
-      },
+const initFormData = {
+  name: {
+    value: '',
+    validator: {
+      minLength: 3,
+      maxLength: 6,
+      required: true,
     },
-    isFormValid: false,
-  };
+    error: { status: true, message: '', isTouched: false },
+  },
+  phonenumber: {
+    value: '',
+    validator: {
+      minLength: 10,
+      maxLength: 10,
+    },
+    error: { status: true, message: '', isTouched: false },
+  },
+  email: {
+    value: '',
+    validator: {
+      required: true,
+    },
+    error: { status: true, message: '', isTouched: false },
+  },
+  password: {
+    value: '',
+    validator: {
+      minLength: 6,
+      maxLength: 24,
+      required: true,
+    },
+    error: { status: true, message: '', isTouched: false },
+  },
+};
 
-  checkValue = (value, rules) => {
+function RegisterForm() {
+  const [formData, setFormData] = useState(initFormData);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const { name, phonenumber, email, password } = formData;
+
+  const checkValue = (value, rules) => {
     let isValid = true;
     let trimmerValue = value.trim();
     let message = '';
@@ -64,14 +65,14 @@ export default class RegisterForm extends Component {
     return { isValid, message };
   };
 
-  onChangeInput = (e) => {
+  const onChangeInput = (e) => {
     const fieldName = e.target.name;
     const fieldValue = e.target.value;
-    const formUpdate = { ...this.state.formData };
+    const formUpdate = { ...formData };
     formUpdate[fieldName].value = fieldValue;
     formUpdate[fieldName].error.isTouched = true;
 
-    let { isValid, message } = this.checkValue(e.target.value, formUpdate[fieldName].validator);
+    let { isValid, message } = checkValue(e.target.value, formUpdate[fieldName].validator);
 
     formUpdate[fieldName].error.status = !isValid;
     formUpdate[fieldName].error.message = message;
@@ -83,15 +84,13 @@ export default class RegisterForm extends Component {
       }
     }
 
-    this.setState({
-      formData: formUpdate,
-      isFormValid: newIsFormValid,
-    });
+    setFormData(formUpdate);
+    setIsFormValid(newIsFormValid);
   };
 
-  onSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    const { name, phonenumber, email, password } = this.state.formData;
+    const { name, phonenumber, email, password } = formData;
     const result = {
       name: name.value,
       email: email.value,
@@ -101,46 +100,40 @@ export default class RegisterForm extends Component {
     console.log(result);
   };
 
-  render() {
-    const { name, phonenumber, email, password } = this.state.formData;
+  console.log(formData);
 
-    return (
-      <div className="RegisterForm">
-        <form onSubmit={this.onSubmit}>
-          <InputText
-            onChangeInput={this.onChangeInput}
-            value={name.value}
-            name="name"
-            placeholder="ชื่อ"
-            error={name.error}
-          />
-          <InputText
-            onChangeInput={this.onChangeInput}
-            value={phonenumber.value}
-            name="phonenumber"
-            placeholder="เบอร์โทรศัพท์"
-            error={phonenumber.error}
-          />
-          <InputText
-            onChangeInput={this.onChangeInput}
-            value={email.value}
-            name="email"
-            placeholder="อีเมล"
-            error={email.error}
-          />
-          <InputText
-            onChangeInput={this.onChangeInput}
-            value={password.value}
-            name="password"
-            placeholder="รหัสผ่าน"
-            error={password.error}
-            type="password"
-          />
-          <button disabled={!this.state.isFormValid} htmlFor="submit" className="Button">
-            Register
-          </button>
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div className="RegisterForm">
+      <form onSubmit={onSubmit}>
+        <InputText onChangeInput={onChangeInput} value={name.value} name="name" placeholder="ชื่อ" error={name.error} />
+        <InputText
+          onChangeInput={onChangeInput}
+          value={phonenumber.value}
+          name="phonenumber"
+          placeholder="เบอร์โทรศัพท์"
+          error={phonenumber.error}
+        />
+        <InputText
+          onChangeInput={onChangeInput}
+          value={email.value}
+          name="email"
+          placeholder="อีเมล"
+          error={email.error}
+        />
+        <InputText
+          onChangeInput={onChangeInput}
+          value={password.value}
+          name="password"
+          placeholder="รหัสผ่าน"
+          error={password.error}
+          type="password"
+        />
+        <button disabled={!isFormValid} htmlFor="submit" className="Button">
+          Register
+        </button>
+      </form>
+    </div>
+  );
 }
+
+export default RegisterForm;
