@@ -1,7 +1,10 @@
 import React from 'react';
 import Instruction from '../../components/instruction';
-import PostList from '../../components/postList';
 import mockedPosts from '../../assets/mock/post';
+/* Exercise */
+// import PostList from '../../components/postList';
+/* Answer */
+import PostList from '../../components/postListE9';
 
 function Exercise9() {
   return (

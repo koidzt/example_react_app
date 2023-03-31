@@ -21,7 +21,7 @@ function Home() {
         <Link to="/exercise-6">Exercise #6 - ContactForm (Custom Hooks)</Link>
         <Link to="/exercise-7">Exercise #7 - Posts App (Context API)</Link>
         <Link to="/exercise-8">Exercise #8 - Posts App Theme (Context API)</Link>
-        <Link to="/exercise-9">Exercise #9 - Posts App (useReducer)</Link>
+        <Link to="/exercise-9">Exercise #9 - Posts App (useState)</Link>
         <Link to="/exercise-10">Exercise #10 - Posts App (useReducer)</Link>
       </div>
     </div>

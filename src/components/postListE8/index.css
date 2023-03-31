@@ -1,0 +1,41 @@
+.post-list {
+  margin: 0 50px;
+}
+
+.post {
+  border-radius: 10px;
+  padding: 40px;
+  margin: 40px 0;
+}
+
+.post-title {
+  margin: 20px 0;
+}
+
+.post-description {
+  margin: 20px 0;
+}
+
+.post-author {
+  margin: 20px 0;
+}
+
+.post-user {
+  margin-right: 50px;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.post-edit-action-button,
+.post-delete-action-button {
+  width: 100px;
+  font-size: 20px;
+}
+
+.post-delete-action-button {
+  margin-left: 20px;
+}

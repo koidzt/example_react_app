@@ -12,10 +12,10 @@
 
 ✔️ Exercise 6 - ContactForm (Custom Hooks)
 
-➖ Exercise 7 - Posts App (Context API)
+✔️ Exercise 7 - Posts App (Context API)
 
-➖ Exercise 8 - Posts App Theme (Context API)
+✔️ Exercise 8 - Posts App Theme (Context API)
 
-➖ Exercise 9 - Posts App (useReducer)
+✔️ Exercise 9 - Posts App (useState)
 
-➖ Exercise 10 - Posts App (useReducer)
+✔️ Exercise 10 - Posts App (useReducer)
